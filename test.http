@@ -1,0 +1,60 @@
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Anchal",
+  "email": "anchal@gmail.com",
+  "enrollment_number": "BBA2026ABC",
+  "password": "securepassword123",
+  "role": "STUDENT",
+  "course": "BBA"
+}
+
+###
+
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "sy850630@gmail.com",
+  "password": "securepassword123"
+}
+
+### Guard Test (List of Users)
+
+GET http://localhost:5000/api/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMzNhYjU4Ni04Mzg4LTRlMmMtYmY4My01NmU2YWFmMzJlODgiLCJyb2xlIjoiU1RVREVOVCIsImlhdCI6MTc5Mjc2NjI5OCwiZXhwIjoxNzkyNzY5ODk4fQ.jIhmh8iVO5Z_OXpDV-NmwzF_6xcoua9jCjlOGfTyP5A
+
+### Naya Project Upload Karna (Token zaroori hai)
+
+POST http://localhost:5000/api/projects
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMzNhYjU4Ni04Mzg4LTRlMmMtYmY4My01NmU2YWFmMzJlODgiLCJyb2xlIjoiU1RVREVOVCIsImlhdCI6MTc5Mjc2NjI5OCwiZXhwIjoxNzkyNzY5ODk4fQ.jIhmh8iVO5Z_OXpDV-NmwzF_6xcoua9jCjlOGfTyP5A
+
+{
+  "title": "DevCampus Portal",
+  "description": "Ek smart campus network jahan BCA aur baaki courses ke students apne projects showcase kar sakte hain.",
+  "tech_stack": "Node.js, Express, PostgreSQL, React",
+  "github_link": "https://github.com/satish/devcampus",
+  "live_url": "https://devcampus.onrender.com"
+}
+
+### Sabhi Projects ki list dekhna (Global Feed)
+
+GET http://localhost:5000/api/projects
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMzNhYjU4Ni04Mzg4LTRlMmMtYmY4My01NmU2YWFmMzJlODgiLCJyb2xlIjoiU1RVREVOVCIsImlhdCI6MTc5Mjc2NjI5OCwiZXhwIjoxNzkyNzY5ODk4fQ.jIhmh8iVO5Z_OXpDV-NmwzF_6xcoua9jCjlOGfTyP5A
+
+### Sirf Apne Projects Dekhna (My Projects)
+
+GET http://localhost:5000/api/projects/my-projects
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMzNhYjU4Ni04Mzg4LTRlMmMtYmY4My01NmU2YWFmMzJlODgiLCJyb2xlIjoiU1RVREVOVCIsImlhdCI6MTc5Mjc3MTM4OCwiZXhwIjoxNzkyNzc0OTg4fQ.6H7kXwUygtDfshyVZ9eLjLrYEDO1rqZeORw0jHTCvdQ
+
+### Project Edit Karna (ID 1 ko update kar rahe hain)
+
+PUT http://localhost:5000/api/projects/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMzNhYjU4Ni04Mzg4LTRlMmMtYmY4My01NmU2YWFmMzJlODgiLCJyb2xlIjoiU1RVREVOVCIsImlhdCI6MTc5Mjc3MTM4OCwiZXhwIjoxNzkyNzc0OTg4fQ.6H7kXwUygtDfshyVZ9eLjLrYEDO1rqZeORw0jHTCvdQ
+
+{
+  "title": "DevCampus Portal v2.0"
+}
