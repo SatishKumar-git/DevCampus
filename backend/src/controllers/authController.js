@@ -49,8 +49,11 @@ const loginUser = async (req, res) => {
 
 const registerUser = async (req, res) => {
     try {
-        // 1. Yahan course add kiya
         const { name, email, enrollment_number, password, role, course } = req.body;
+
+        // NAYI LINE: Agar student nahi hai toh inko null kar do
+        const finalCourse = role === 'STUDENT' ? course : null;
+        const finalEnrollment = role === 'STUDENT' ? enrollment_number : null;
 
         const userExists = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
         if (userExists.rows.length > 0) {
@@ -60,19 +63,26 @@ const registerUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // 2. Query mein course aur $6 add kiya
         const insertQuery = `
             INSERT INTO users (name, email, enrollment_number, password_hash, role, course)
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING id, name, email, role, course;
         `;
-        // 3. Values array mein course pass kiya
-        const values = [name, email, enrollment_number, hashedPassword, role, course];
+        
+        // VALUES array mein finalEnrollment aur finalCourse pass karo
+        const values = [name, email, finalEnrollment, hashedPassword, role, finalCourse];
         
         const newUser = await pool.query(insertQuery, values);
 
+        const token = jwt.sign(
+            { sub: String(newUser.rows[0].id), role: newUser.rows[0].role },
+            process.env.JWT_SECRET || 'secretkey',
+            { expiresIn: '1h' }
+        );
+
         res.status(201).json({
             message: 'User successfully register ho gaya!',
+            token: token,
             user: newUser.rows[0]
         });
 
@@ -81,5 +91,4 @@ const registerUser = async (req, res) => {
         res.status(500).json({ error: 'Server mein kuch gadbad hai' });
     }
 };
-
 module.exports = { registerUser, loginUser };
