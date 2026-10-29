@@ -1,6 +1,8 @@
 const pool = require('../config/db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const loginUser = async (req, res) => {
     try {
@@ -91,4 +93,67 @@ const registerUser = async (req, res) => {
         res.status(500).json({ error: 'Server mein kuch gadbad hai' });
     }
 };
-module.exports = { registerUser, loginUser };
+
+const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).json({ error: 'Email dena zaroori hai' });
+        }
+
+        // 1. Check karo ki email database mein hai ya nahi
+        const userExists = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (userExists.rows.length === 0) {
+            return res.status(404).json({ error: 'Is email se koi account nahi mila' });
+        }
+
+        // 2. Resend API se Email Bhejo
+        const { data, error } = await resend.emails.send({
+            from: 'DevCampus <onboarding@resend.dev>',
+            to: email, 
+            subject: 'DevCampus - Password Reset Link',
+            html: '<p>Apna password reset karne ke liye is link par click karein: <strong><a href="http://localhost:5173/reset-password">Reset Password</a></strong></p>'
+        });
+
+        if (error) {
+            console.error('Resend Error:', error);
+            return res.status(400).json({ error: 'Email bhejne mein problem aayi' });
+        }
+
+        console.log("Email successfully bheja gaya:", data);
+        return res.status(200).json({ message: 'Password reset link email par bhej diya gaya hai.' });
+
+    } catch (error) {
+        console.error('Forgot Password Error:', error.message);
+        return res.status(500).json({ error: 'Server mein kuch gadbad hai' });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    try {
+        const { email, newPassword } = req.body;
+        
+        if (!email || !newPassword) {
+            return res.status(400).json({ error: 'Email aur naya password dono zaroori hain' });
+        }
+
+        // Naye password ko hash (encrypt) karna
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        // Database mein password update karna
+        const updateQuery = 'UPDATE users SET password_hash = $1 WHERE email = $2 RETURNING *';
+        const result = await pool.query(updateQuery, [hashedPassword, email]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Is email se koi account nahi mila' });
+        }
+
+        return res.status(200).json({ message: 'Password successfully update ho gaya!' });
+
+    } catch (error) {
+        console.error('Reset Password Error:', error.message);
+        return res.status(500).json({ error: 'Server mein kuch gadbad hai' });
+    }
+};
+module.exports = { registerUser, loginUser, forgotPassword, resetPassword };

@@ -1,4 +1,5 @@
 require('dotenv').config();
+console.log("Mera DB URL yeh hai:", process.env.DATABASE_URL); // <-- Yahan add kiya
 
 // Database connection initialize karna
 require('./src/config/db');

@@ -7,6 +7,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // State for Show/Hide
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
@@ -81,18 +82,26 @@ export default function Login() {
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-bold">Password</label>
-              <a href="#" className="text-sm font-semibold text-gray-500 hover:text-[#123B3B]">Forgot password?</a>
+              <Link to="/forgot-password" className="text-sm font-semibold text-gray-500 hover:text-[#E69A52] transition-colors">
+                Forgot password?
+              </Link>
             </div>
             <div className="relative">
               <input 
-                type="password" 
+                type={showPassword ? "text" : "password"} 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-4 bg-transparent border border-gray-300 rounded focus:outline-none focus:border-[#123B3B] focus:ring-1 focus:ring-[#123B3B] transition-all" 
+                className="w-full p-4 pr-16 bg-transparent border border-gray-300 rounded focus:outline-none focus:border-[#123B3B] focus:ring-1 focus:ring-[#123B3B] transition-all" 
                 placeholder="Enter your password" 
                 required
               />
-              <button type="button" className="absolute text-sm font-bold text-gray-400 right-4 top-4 hover:text-[#123B3B]">SHOW</button>
+              <button 
+                type="button" 
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute text-sm font-bold text-gray-500 transform -translate-y-1/2 right-4 top-1/2 hover:text-[#123B3B] transition-colors"
+              >
+                {showPassword ? "HIDE" : "SHOW"}
+              </button>
             </div>
           </div>
           

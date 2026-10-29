@@ -1,8 +1,11 @@
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
-import Register from './pages/Register'; // 1. Yahan Register import kiya hai
+import Register from './pages/Register'; 
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from "./pages/ResetPassword";
+import StudentDashboard from './pages/StudentDashboard';
 
 function App() {
   return (
@@ -12,7 +15,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} /> {/* 2. Yahan Route set kiya hai */}
+        <Route path="/register" element={<Register />} /> 
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        {/* Yahan path="/dashboard" ko "/student-dashboard" kar diya hai 👇 */}
+        <Route path="/student-dashboard" element={<StudentDashboard />} />
       </Routes>
     </div>
   );
