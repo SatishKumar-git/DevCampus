@@ -1,22 +1,25 @@
 require('dotenv').config();
-console.log("Mera DB URL yeh hai:", process.env.DATABASE_URL); // <-- Yahan add kiya
 
-// Database connection initialize karna
-require('./src/config/db');
 
 const express = require('express');
 const cors = require('cors');
+
+// Database connection initialize karna
+require('./src/config/db');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
 // Routes ko import karna
 const authRoutes = require('./src/routes/authRoutes');
 
-// Auth endpoints: http://localhost:5000/api/auth/register aur /api/auth/login
+// Auth endpoints
 app.use('/api/auth', authRoutes);
 app.use('/api/users', require('./src/routes/userRoutes'));
+
+// Yahan correct path use kiya hai (src ke andar wale routes)
 app.use('/api/projects', require('./src/routes/projectRoutes'));
 
 app.get('/', (req, res) => {

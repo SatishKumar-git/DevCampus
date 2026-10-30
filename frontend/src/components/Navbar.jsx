@@ -25,7 +25,8 @@ export default function Navbar() {
               {user.role === 'STUDENT' && (
                 <>
                   <Link to="/" className="transition-colors opacity-80 hover:opacity-100 hover:text-[#E69A52]">Feed</Link>
-                  <Link to="/my-projects" className="transition-colors opacity-80 hover:opacity-100 hover:text-[#E69A52]">My Projects</Link>
+                  {/* Yeh link ab sahi dashboard par jayega 👇 */}
+                  <Link to="/student-dashboard" className="transition-colors opacity-80 hover:opacity-100 hover:text-[#E69A52]">My Projects</Link>
                 </>
               )}
               

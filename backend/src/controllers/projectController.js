@@ -34,19 +34,23 @@ const addProject = async (req, res) => {
 
 const getAllProjects = async (req, res) => {
     try {
-        // SQL JOIN lagaya taaki project ke sath user ka naam aur course bhi mil jaye
+        // Token se ID 'sub' ke through hi nikalni hai
+        const userId = req.user.sub; 
+
         const query = `
             SELECT p.id, p.title, p.description, p.tech_stack, p.github_link, p.live_url, p.created_at,
                    u.name AS student_name, u.course AS student_course
             FROM projects p
             JOIN users u ON p.user_id = u.id
+            WHERE p.user_id != $1
             ORDER BY p.created_at DESC;
         `;
-        const result = await pool.query(query);
+        
+        const result = await pool.query(query, [userId]);
         res.status(200).json(result.rows);
     } catch (error) {
         console.error('Projects Fetch Error:', error.message);
-        res.status(500).json({ error: 'Projects laane mein server error' });
+        res.status(500).json({ error: 'Projects fetch error' });
     }
 };
 
