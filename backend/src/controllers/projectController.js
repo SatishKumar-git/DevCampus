@@ -38,7 +38,7 @@ const getAllProjects = async (req, res) => {
         const userId = req.user.sub; 
 
         const query = `
-            SELECT p.id, p.title, p.description, p.tech_stack, p.github_link, p.live_url, p.created_at,
+            SELECT p.id, p.user_id, p.title, p.description, p.tech_stack, p.github_link, p.live_url, p.created_at,
                    u.name AS student_name, u.course AS student_course
             FROM projects p
             JOIN users u ON p.user_id = u.id
@@ -123,5 +123,6 @@ const deleteProject = async (req, res) => {
         res.status(500).json({ error: 'Project delete karne mein server error' });
     }
 };
+
 // Module exports mein naya function add karna mat bhoolna:
 module.exports = { addProject, getAllProjects, getMyProjects, updateProject, deleteProject };

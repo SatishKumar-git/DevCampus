@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { Link } from 'react-router-dom'; // 1. Link tag import kiya
 
 export default function Feed() {
   const { user } = useContext(AuthContext);
@@ -21,7 +22,7 @@ export default function Feed() {
         });
 
         const data = await response.json();
-        
+
         if (response.ok) {
           setFeedProjects(data);
         } else {
@@ -39,7 +40,7 @@ export default function Feed() {
   return (
     <div className="min-h-screen bg-[#F7F4ED] p-8">
       <div className="container mx-auto max-w-6xl">
-        
+
         <div className="mb-8 border-b-2 border-gray-200 pb-4">
           <h1 className="text-4xl font-bold text-[#123B3B]">
             DevCampus <span className="italic text-gray-500 font-light">Feed.</span>
@@ -57,18 +58,24 @@ export default function Feed() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {feedProjects.map((project) => (
               <div key={project.id} className="bg-white p-6 rounded-lg shadow-md border border-gray-200 flex flex-col justify-between hover:shadow-lg transition">
-                
+
                 <div>
                   <h3 className="text-xl font-bold text-[#123B3B] mb-2">{project.title}</h3>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">{project.description}</p>
                   <div className="text-sm font-semibold text-[#E69A52] mb-4">{project.tech_stack}</div>
                 </div>
-                
+
                 <div className="mt-4 pt-4 border-t border-gray-100">
                   {/* Database JOIN se aane wala student ka naam aur course */}
                   <div className="mb-3 bg-gray-50 p-2 rounded">
-                    <p className="text-sm font-bold text-gray-800">🧑‍🎓 {project.student_name}</p>
-                    <p className="text-xs text-gray-500">📚 {project.student_course}</p>
+                    {/* Yahan par user_id, userId, aur student_id teeno ka fallback laga diya hai */}
+                    <Link
+                      to={`/portfolio/${project.user_id || project.userId || project.student_id || project.id}`}
+                      className="text-sm font-bold text-[#E69A52] hover:underline hover:text-orange-500 block"
+                    >
+                      🧑‍🎓 {project.student_name}
+                    </Link>
+                    <p className="text-xs text-gray-500 mt-1">📚 {project.student_course}</p>
                   </div>
 
                   <div className="flex space-x-4">

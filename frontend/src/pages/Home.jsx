@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 
-
 export default function Home() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -99,9 +98,9 @@ export default function Home() {
           <button className="mt-4 text-[#E69A52] font-bold">Create New +</button>
         </div>
 
-        {/* My Portfolio Card (Updated) */}
+        {/* My Portfolio Card (Yahan link update kiya gaya hai user ID ke sath) */}
         <div
-          onClick={() => navigate('/my-portfolio')}
+          onClick={() => navigate(`/portfolio/${user._id || user.id}`)}
           className="p-6 bg-[#293638] rounded shadow-lg border-t-4 border-[#E69A52] cursor-pointer hover:bg-[#344648] transition-colors"
         >
           <h2 className="text-2xl font-bold text-[#F7F4ED] mb-2">My Portfolio</h2>
@@ -114,7 +113,6 @@ export default function Home() {
           <h2 className="text-2xl font-bold text-white mb-2">Global Feed</h2>
           <p className="text-gray-400 mb-6">Explore what other students are building.</p>
 
-          {/* Yahan humne Link tag laga diya hai */}
           <Link to="/feed" className="text-[#E69A52] font-bold hover:underline cursor-pointer">
             Browse Feed →
           </Link>
