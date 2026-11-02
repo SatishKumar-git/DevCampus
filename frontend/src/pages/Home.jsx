@@ -61,16 +61,20 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-6 bg-[#293638] rounded shadow-lg border-t-4 border-blue-500">
+          
+          {/* YAHAN CHANGE KIYA HAI: button ki jagah Link lagaya hai */}
+          <div className="p-6 bg-[#293638] rounded shadow-lg border-t-4 border-blue-500 flex flex-col items-start">
             <h2 className="text-2xl font-bold text-[#F7F4ED] mb-2">Pending Reviews</h2>
-            <p className="text-gray-400">Evaluate and grade projects submitted by your students.</p>
-            <button className="mt-4 text-[#E69A52] hover:underline font-bold">Start Reviewing →</button>
+            <p className="text-gray-400 mb-4">Evaluate and grade projects submitted by your students.</p>
+            <Link to="/pending-reviews" className="text-[#E69A52] hover:underline font-bold">
+              Start Reviewing →
+            </Link>
           </div>
 
-          <div className="p-6 bg-[#293638] rounded shadow-lg border-t-4 border-blue-500">
+          <div className="p-6 bg-[#293638] rounded shadow-lg border-t-4 border-blue-500 flex flex-col items-start">
             <h2 className="text-2xl font-bold text-[#F7F4ED] mb-2">Student Leaderboard</h2>
-            <p className="text-gray-400">Track top performing students in your courses.</p>
-            <button className="mt-4 text-[#E69A52] hover:underline font-bold">View Leaderboard →</button>
+            <p className="text-gray-400 mb-4">Track top performing students in your courses.</p>
+            <button className="text-[#E69A52] hover:underline font-bold">View Leaderboard →</button>
           </div>
         </div>
       </div>
@@ -109,7 +113,7 @@ export default function Home() {
         </div>
 
         {/* Global Feed Card (Remains Same) */}
-        <div className="bg-[#2d3a3a] p-6 rounded-lg border-t-2 border-[#E69A52]">
+        <div className="bg-[#2d3a3a] p-6 rounded-lg border-t-2 border-[#E69A52] flex flex-col items-start">
           <h2 className="text-2xl font-bold text-white mb-2">Global Feed</h2>
           <p className="text-gray-400 mb-6">Explore what other students are building.</p>
 

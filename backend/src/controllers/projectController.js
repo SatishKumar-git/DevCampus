@@ -32,25 +32,22 @@ const addProject = async (req, res) => {
     }
 };
 
+// projectController.js mein getAllProjects update karo
 const getAllProjects = async (req, res) => {
     try {
-        // Token se ID 'sub' ke through hi nikalni hai
-        const userId = req.user.sub; 
-
+        // JOIN lagakar user table se course, year, semester bhi nikal rahe hain
         const query = `
-            SELECT p.id, p.user_id, p.title, p.description, p.tech_stack, p.github_link, p.live_url, p.created_at,
-                   u.name AS student_name, u.course AS student_course
+            SELECT p.*, u.name AS student_name, u.course AS student_course, 
+                   u.year AS student_year, u.semester AS student_semester
             FROM projects p
             JOIN users u ON p.user_id = u.id
-            WHERE p.user_id != $1
             ORDER BY p.created_at DESC;
         `;
-        
-        const result = await pool.query(query, [userId]);
+        const result = await pool.query(query);
         res.status(200).json(result.rows);
     } catch (error) {
-        console.error('Projects Fetch Error:', error.message);
-        res.status(500).json({ error: 'Projects fetch error' });
+        console.error('Fetch Projects Error:', error.message);
+        res.status(500).json({ error: 'Projects fetch karne mein error' });
     }
 };
 
@@ -124,5 +121,30 @@ const deleteProject = async (req, res) => {
     }
 };
 
+const assignMarks = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { marks } = req.body;
+
+        const updateQuery = `
+            UPDATE projects 
+            SET marks = $1 
+            WHERE id = $2 
+            RETURNING *;
+        `;
+        
+        const result = await pool.query(updateQuery, [marks, id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Project not found' });
+        }
+
+        res.status(200).json({ message: 'Marks successfully assigned!', project: result.rows[0] });
+    } catch (error) {
+        console.error('Assign Marks Error:', error.message);
+        res.status(500).json({ error: 'Marks assign karne mein server error' });
+    }
+};
+
 // Module exports mein naya function add karna mat bhoolna:
-module.exports = { addProject, getAllProjects, getMyProjects, updateProject, deleteProject };
+module.exports = { addProject, getAllProjects, getMyProjects, updateProject, deleteProject, assignMarks };

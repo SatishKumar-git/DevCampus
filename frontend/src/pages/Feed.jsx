@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Link } from 'react-router-dom'; // 1. Link tag import kiya
+import { Link } from 'react-router-dom'; 
 
 export default function Feed() {
   const { user } = useContext(AuthContext);
@@ -16,7 +16,6 @@ export default function Feed() {
           return;
         }
 
-        // Tumhare routes ke hisaab se 'getAllProjects' ka route '/' hai
         const response = await fetch('http://localhost:5000/api/projects/', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -24,7 +23,14 @@ export default function Feed() {
         const data = await response.json();
 
         if (response.ok) {
-          setFeedProjects(data);
+          // 🧠 FILTER LOGIC: Apne projects ko feed se hide karna
+          // User object se id nikal kar check karenge (sub, id, ya _id jo bhi backend bhej raha ho)
+          const currentUserId = user?.sub || user?.id || user?._id;
+          
+          // Sirf wo projects rakhne hain jinka user_id current logged-in user ki id se alag ho
+          const otherStudentsProjects = data.filter(project => project.user_id !== currentUserId);
+          
+          setFeedProjects(otherStudentsProjects);
         } else {
           setError(data.error || "Projects load nahi ho paye.");
         }
@@ -66,9 +72,7 @@ export default function Feed() {
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-gray-100">
-                  {/* Database JOIN se aane wala student ka naam aur course */}
                   <div className="mb-3 bg-gray-50 p-2 rounded">
-                    {/* Yahan par user_id, userId, aur student_id teeno ka fallback laga diya hai */}
                     <Link
                       to={`/portfolio/${project.user_id || project.userId || project.student_id || project.id}`}
                       className="text-sm font-bold text-[#E69A52] hover:underline hover:text-orange-500 block"

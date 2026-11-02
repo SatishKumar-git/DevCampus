@@ -10,6 +10,7 @@ import StudentDashboard from './pages/StudentDashboard';
 import Feed from './pages/Feed';
 import Profile from './pages/Profile';
 import Portfolio from './pages/Portfolio'; // Naya import kiya
+import PendingReviews from './pages/PendingReviews';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/student-dashboard" element={<StudentDashboard />} />
           <Route path="/feed" element={<Feed />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/pending-reviews" element={<PendingReviews />} />
           
           {/* Naya Portfolio Route (ID ke sath) */}
           <Route path="/portfolio/:id" element={<Portfolio />} /> 

@@ -8,8 +8,10 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [course, setCourse] = useState('');
   const [enrollment, setEnrollment] = useState('');
+  const [year, setYear] = useState(''); // Naya state
+  const [semester, setSemester] = useState(''); // Naya state
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('STUDENT'); // Default role Student
+  const [role, setRole] = useState('STUDENT'); 
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
@@ -22,7 +24,9 @@ export default function Register() {
         email, 
         course,
         enrollment_number: enrollment,
-        role, // Dropdown se select kiya hua role yahan jayega
+        year, // API me naya field
+        semester, // API me naya field
+        role, 
         password 
       });
       login(res.data.user, res.data.token);
@@ -77,18 +81,48 @@ export default function Register() {
             </div>
           </div>
           
-          {/* Agar user Student select karta hai, tabhi Course aur Enrollment dikhega */}
+          {/* Agar user Student select karta hai, tabhi Course, Enrollment, Year aur Semester dikhega */}
           {role === 'STUDENT' && (
-            <div className="flex gap-4">
-              <div className="w-1/2">
-                <label className="block mb-2 text-sm font-bold">Course</label>
-                <input type="text" value={course} onChange={(e) => setCourse(e.target.value)} className="w-full p-3 bg-transparent border border-gray-300 rounded focus:outline-none focus:border-[#123B3B] focus:ring-1 focus:ring-[#123B3B]" placeholder="e.g., BCA" required />
+            <>
+              <div className="flex gap-4">
+                <div className="w-1/2">
+                  <label className="block mb-2 text-sm font-bold">Course</label>
+                  <input type="text" value={course} onChange={(e) => setCourse(e.target.value)} className="w-full p-3 bg-transparent border border-gray-300 rounded focus:outline-none focus:border-[#123B3B] focus:ring-1 focus:ring-[#123B3B]" placeholder="e.g., BCA" required />
+                </div>
+                <div className="w-1/2">
+                  <label className="block mb-2 text-sm font-bold">Enrollment No.</label>
+                  <input type="text" value={enrollment} onChange={(e) => setEnrollment(e.target.value)} className="w-full p-3 bg-transparent border border-gray-300 rounded focus:outline-none focus:border-[#123B3B] focus:ring-1 focus:ring-[#123B3B]" placeholder="e.g., SU2026..." required />
+                </div>
               </div>
-              <div className="w-1/2">
-                <label className="block mb-2 text-sm font-bold">Enrollment No.</label>
-                <input type="text" value={enrollment} onChange={(e) => setEnrollment(e.target.value)} className="w-full p-3 bg-transparent border border-gray-300 rounded focus:outline-none focus:border-[#123B3B] focus:ring-1 focus:ring-[#123B3B]" placeholder="e.g., SU2026..." required />
+
+              {/* Naye Dropdowns (Year aur Semester) */}
+              <div className="flex gap-4">
+                <div className="w-1/2">
+                  <label className="block mb-2 text-sm font-bold">Year</label>
+                  <select value={year} onChange={(e) => setYear(e.target.value)} className="w-full p-3 bg-transparent border border-gray-300 rounded focus:outline-none focus:border-[#123B3B] focus:ring-1 focus:ring-[#123B3B] cursor-pointer" required>
+                    <option value="" disabled>Select Year</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                  </select>
+                </div>
+                <div className="w-1/2">
+                  <label className="block mb-2 text-sm font-bold">Semester</label>
+                  <select value={semester} onChange={(e) => setSemester(e.target.value)} className="w-full p-3 bg-transparent border border-gray-300 rounded focus:outline-none focus:border-[#123B3B] focus:ring-1 focus:ring-[#123B3B] cursor-pointer" required>
+                    <option value="" disabled>Select Semester</option>
+                    <option value="1st Semester">1st Semester</option>
+                    <option value="2nd Semester">2nd Semester</option>
+                    <option value="3rd Semester">3rd Semester</option>
+                    <option value="4th Semester">4th Semester</option>
+                    <option value="5th Semester">5th Semester</option>
+                    <option value="6th Semester">6th Semester</option>
+                    <option value="7th Semester">7th Semester</option>
+                    <option value="8th Semester">8th Semester</option>
+                  </select>
+                </div>
               </div>
-            </div>
+            </>
           )}
 
           <div>

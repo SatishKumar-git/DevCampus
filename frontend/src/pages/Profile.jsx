@@ -5,7 +5,7 @@ import axios from 'axios';
 export default function Profile() {
   const { user } = useContext(AuthContext); 
   const [formData, setFormData] = useState({
-    name: '', course: '', bio: '', skills: '', github_link: '', linkedin_link: '', portfolio_link: ''
+    name: '', course: '', year: '', semester: '', bio: '', skills: '', github_link: '', linkedin_link: '', portfolio_link: ''
   });
   const [message, setMessage] = useState('');
 
@@ -23,9 +23,15 @@ export default function Profile() {
         });
         if(res.data) {
             setFormData({
-                name: res.data.name || '', course: res.data.course || '', bio: res.data.bio || '',
-                skills: res.data.skills || '', github_link: res.data.github_link || '',
-                linkedin_link: res.data.linkedin_link || '', portfolio_link: res.data.portfolio_link || ''
+                name: res.data.name || '', 
+                course: res.data.course || '', 
+                year: res.data.year || '',         // Added year
+                semester: res.data.semester || '', // Added semester
+                bio: res.data.bio || '',
+                skills: res.data.skills || '', 
+                github_link: res.data.github_link || '',
+                linkedin_link: res.data.linkedin_link || '', 
+                portfolio_link: res.data.portfolio_link || ''
             });
         }
       } catch (error) {
@@ -76,6 +82,36 @@ export default function Profile() {
               </div>
             )}
           </div>
+
+          {/* Year aur Semester sirf student ko dikhega */}
+          {isStudent && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-700 font-semibold mb-2">Year</label>
+                <select name="year" value={formData.year} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded focus:border-[#E69A52] outline-none text-black bg-white" required>
+                  <option value="" disabled>Select Year</option>
+                  <option value="1st Year">1st Year</option>
+                  <option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option>
+                  <option value="4th Year">4th Year</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-gray-700 font-semibold mb-2">Semester</label>
+                <select name="semester" value={formData.semester} onChange={handleChange} className="w-full p-3 border border-gray-300 rounded focus:border-[#E69A52] outline-none text-black bg-white" required>
+                  <option value="" disabled>Select Semester</option>
+                  <option value="1st Semester">1st Semester</option>
+                  <option value="2nd Semester">2nd Semester</option>
+                  <option value="3rd Semester">3rd Semester</option>
+                  <option value="4th Semester">4th Semester</option>
+                  <option value="5th Semester">5th Semester</option>
+                  <option value="6th Semester">6th Semester</option>
+                  <option value="7th Semester">7th Semester</option>
+                  <option value="8th Semester">8th Semester</option>
+                </select>
+              </div>
+            </div>
+          )}
 
           <div>
             <label className="block text-gray-700 font-semibold mb-2">Bio / About Me</label>

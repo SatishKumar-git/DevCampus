@@ -18,21 +18,42 @@ const getProfile = async (req, res) => {
 // User ki profile update karne ke liye
 const updateProfile = async (req, res) => {
     try {
-        const userId = req.user.sub;
-        const { name, course, bio, skills, github_link, linkedin_link, portfolio_link } = req.body;
+        const userId = req.user.sub; // Token se aayi ID
         
-        const query = `
-            UPDATE users 
-            SET name = $1, course = $2, bio = $3, skills = $4, github_link = $5, linkedin_link = $6, portfolio_link = $7
-            WHERE id = $8 RETURNING name, course, bio, skills, github_link, linkedin_link, portfolio_link;
+        // req.body mein year aur semester add kar diye
+        const { name, course, year, semester, bio, skills, github_link, linkedin_link, portfolio_link } = req.body;
+
+        // COALESCE ensure karta hai ki field khali na ho jaye agar frontend se null aaye
+        const updateQuery = `
+            UPDATE users
+            SET name = COALESCE($1, name),
+                course = COALESCE($2, course),
+                year = COALESCE($3, year),
+                semester = COALESCE($4, semester),
+                bio = COALESCE($5, bio),
+                skills = COALESCE($6, skills),
+                github_link = COALESCE($7, github_link),
+                linkedin_link = COALESCE($8, linkedin_link),
+                portfolio_link = COALESCE($9, portfolio_link)
+            WHERE id = $10
+            RETURNING *;
         `;
-        const values = [name, course, bio, skills, github_link, linkedin_link, portfolio_link, userId];
-        
-        const result = await pool.query(query, values);
-        res.status(200).json({ message: "Profile updated successfully", user: result.rows[0] });
+
+        const values = [name, course, year, semester, bio, skills, github_link, linkedin_link, portfolio_link, userId];
+        const result = await pool.query(updateQuery, values);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'User nahi mila' });
+        }
+
+        // Security ke liye password remove kar dete hain frontend par bhejne se pehle
+        const updatedUser = result.rows[0];
+        delete updatedUser.password_hash;
+
+        res.status(200).json({ message: 'Profile updated successfully', user: updatedUser });
     } catch (error) {
         console.error('Profile Update Error:', error.message);
-        res.status(500).json({ error: "Profile update mein error aayi" });
+        res.status(500).json({ error: 'Profile update karne mein server error' });
     }
 };
 

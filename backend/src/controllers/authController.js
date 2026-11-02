@@ -51,46 +51,43 @@ const loginUser = async (req, res) => {
 
 const registerUser = async (req, res) => {
     try {
-        const { name, email, enrollment_number, password, role, course } = req.body;
+        // Frontend se aane wale naye fields (year, semester) yahan add kiye hain
+        const { name, email, password, course, year, semester, role } = req.body;
 
-        // NAYI LINE: Agar student nahi hai toh inko null kar do
-        const finalCourse = role === 'STUDENT' ? course : null;
-        const finalEnrollment = role === 'STUDENT' ? enrollment_number : null;
-
-        const userExists = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-        if (userExists.rows.length > 0) {
-            return res.status(400).json({ error: 'User is email se pehle hi register hai!' });
+        // Validation
+        if (!name || !email || !password || !course || !year || !semester) {
+            return res.status(400).json({ error: 'Sabhi fields bharna zaroori hai!' });
         }
 
+        // Check if user already exists
+        const userExists = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (userExists.rows.length > 0) {
+            return res.status(400).json({ error: 'Email pehle se register hai' });
+        }
+
+        // Password Hashing
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
+        // Database mein naye fields (year, semester) ke sath insert karna
         const insertQuery = `
-            INSERT INTO users (name, email, enrollment_number, password_hash, role, course)
-            VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING id, name, email, role, course;
+            INSERT INTO users (name, email, password_hash, course, year, semester, role)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING id, name, email, course, year, semester, role;
         `;
-        
-        // VALUES array mein finalEnrollment aur finalCourse pass karo
-        const values = [name, email, finalEnrollment, hashedPassword, role, finalCourse];
+        const userRole = role || 'student'; // Default role is student
+        const values = [name, email, hashedPassword, course, year, semester, userRole];
         
         const newUser = await pool.query(insertQuery, values);
 
-        const token = jwt.sign(
-            { sub: String(newUser.rows[0].id), role: newUser.rows[0].role },
-            process.env.JWT_SECRET || 'secretkey',
-            { expiresIn: '1h' }
-        );
-
-        res.status(201).json({
-            message: 'User successfully register ho gaya!',
-            token: token,
-            user: newUser.rows[0]
+        res.status(201).json({ 
+            message: 'User successfully register ho gaya! 🎉', 
+            user: newUser.rows[0] 
         });
 
     } catch (error) {
         console.error('Registration Error:', error.message);
-        res.status(500).json({ error: 'Server mein kuch gadbad hai' });
+        res.status(500).json({ error: 'Server error registration ke waqt' });
     }
 };
 
