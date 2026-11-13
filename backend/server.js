@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 // PostgreSQL Database connection ko import karna
 const pool = require('./src/config/db');
@@ -13,14 +14,14 @@ app.use(express.json());
 const authRoutes = require('./src/routes/authRoutes');
 const profileRoutes = require('./src/routes/profileRoutes');
 const userRoutes = require('./src/routes/userRoutes');
-const adminRoutes = require('./src/routes/adminRoutes'); // <-- Naya admin router import kiya
+const adminRoutes = require('./src/routes/adminRoutes'); 
 
 // Auth & API endpoints
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/projects', require('./src/routes/projectRoutes'));
-app.use('/api/admin', adminRoutes); // <-- Ab yahan admin routes properly map honge (/api/admin/logs & /api/admin/users)
+app.use('/api/admin', adminRoutes);
 
 // ==========================================
 // PORTFOLIO API ROUTE (PostgreSQL Version)
@@ -29,7 +30,7 @@ app.get('/api/portfolio/:id', async (req, res) => {
   try {
     const userId = req.params.id;
 
-    // 1. User ki profile find karo (raw SQL query)
+    // 1. User ki profile find karo
     const userResult = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
     
     if (userResult.rows.length === 0) {
@@ -37,9 +38,9 @@ app.get('/api/portfolio/:id', async (req, res) => {
     }
 
     const profile = userResult.rows[0];
-    delete profile.password; // Frontend par password nahi bhejna hai
+    delete profile.password_hash; // Fixed: password_hash delete hoga
 
-    // 2. Us user ke projects find karo ('user_id' column use karke)
+    // 2. Us user ke projects find karo
     const projectResult = await pool.query('SELECT * FROM projects WHERE user_id = $1', [userId]);
     const projects = projectResult.rows;
 
@@ -56,8 +57,17 @@ app.get('/api/portfolio/:id', async (req, res) => {
 });
 // ==========================================
 
+// API Status Route (Static files ke upar hona chahiye)
 app.get('/', (req, res) => {
     res.json({ message: 'DevCampus API is running! 🚀' });
+});
+
+// React ke built static files serve karne ke liye
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Catch-all route for React Router
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
 });
 
 // Server Start Karne Ka Code
