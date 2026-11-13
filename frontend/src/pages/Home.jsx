@@ -36,13 +36,17 @@ export default function Home() {
           <div className="p-6 bg-[#293638] rounded shadow-lg border-t-4 border-red-500">
             <h2 className="text-2xl font-bold text-[#F7F4ED] mb-2">Manage Users</h2>
             <p className="text-gray-400">View, block, or delete user accounts from the platform.</p>
-            <button className="mt-4 text-[#E69A52] hover:underline font-bold">Go to Users →</button>
+            <Link to="/admin/users" className="text-[#E69A52] font-semibold hover:underline">
+              Go to Users →
+            </Link>
           </div>
 
           <div className="p-6 bg-[#293638] rounded shadow-lg border-t-4 border-red-500">
             <h2 className="text-2xl font-bold text-[#F7F4ED] mb-2">System Logs</h2>
             <p className="text-gray-400">Monitor website activity and error reports.</p>
-            <button className="mt-4 text-[#E69A52] hover:underline font-bold">View Logs →</button>
+            <Link to="/admin/logs" className="mt-4 text-[#E69A52] hover:underline font-bold">
+              View Logs →
+            </Link>
           </div>
         </div>
       </div>
@@ -61,7 +65,7 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
+
           {/* YAHAN CHANGE KIYA HAI: button ki jagah Link lagaya hai */}
           <div className="p-6 bg-[#293638] rounded shadow-lg border-t-4 border-blue-500 flex flex-col items-start">
             <h2 className="text-2xl font-bold text-[#F7F4ED] mb-2">Pending Reviews</h2>
@@ -74,7 +78,9 @@ export default function Home() {
           <div className="p-6 bg-[#293638] rounded shadow-lg border-t-4 border-blue-500 flex flex-col items-start">
             <h2 className="text-2xl font-bold text-[#F7F4ED] mb-2">Student Leaderboard</h2>
             <p className="text-gray-400 mb-4">Track top performing students in your courses.</p>
-            <button className="text-[#E69A52] hover:underline font-bold">View Leaderboard →</button>
+            <Link to="/leaderboard" className="text-[#E69A52] hover:underline font-bold">
+              View Leaderboard →
+            </Link>
           </div>
         </div>
       </div>

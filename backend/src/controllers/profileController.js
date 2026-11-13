@@ -1,10 +1,11 @@
 const pool = require('../config/db'); // Apna DB path match kar lena
+const { createLog } = require('./logController'); // <-- Log controller import kiya
 
 // User ki profile fetch karne ke liye
 const getProfile = async (req, res) => {
     try {
         const userId = req.user.sub; // Token se ID li
-        const query = 'SELECT name, email, course, bio, skills, github_link, linkedin_link, portfolio_link FROM users WHERE id = $1';
+        const query = 'SELECT name, email, course, year, semester, bio, skills, github_link, linkedin_link, portfolio_link FROM users WHERE id = $1';
         const result = await pool.query(query, [userId]);
         
         if (result.rows.length === 0) return res.status(404).json({ error: "User nahi mila" });
@@ -49,6 +50,13 @@ const updateProfile = async (req, res) => {
         // Security ke liye password remove kar dete hain frontend par bhejne se pehle
         const updatedUser = result.rows[0];
         delete updatedUser.password_hash;
+
+        // 📝 System log mein entry daal di
+        await createLog(
+            'UPDATE_PROFILE', 
+            updatedUser.email || 'User', 
+            `Updated profile for ${updatedUser.name}: Course -> ${updatedUser.course || 'N/A'}, Year -> ${updatedUser.year || 'N/A'}, Sem -> ${updatedUser.semester || 'N/A'}`
+        );
 
         res.status(200).json({ message: 'Profile updated successfully', user: updatedUser });
     } catch (error) {

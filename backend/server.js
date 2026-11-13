@@ -6,19 +6,21 @@ const cors = require('cors');
 const pool = require('./src/config/db');
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
 // Routes ko import karna
 const authRoutes = require('./src/routes/authRoutes');
 const profileRoutes = require('./src/routes/profileRoutes');
+const userRoutes = require('./src/routes/userRoutes');
+const adminRoutes = require('./src/routes/adminRoutes'); // <-- Naya admin router import kiya
 
 // Auth & API endpoints
 app.use('/api/auth', authRoutes);
-app.use('/api/users', require('./src/routes/userRoutes'));
+app.use('/api/users', userRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/projects', require('./src/routes/projectRoutes'));
+app.use('/api/admin', adminRoutes); // <-- Ab yahan admin routes properly map honge (/api/admin/logs & /api/admin/users)
 
 // ==========================================
 // PORTFOLIO API ROUTE (PostgreSQL Version)

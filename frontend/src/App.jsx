@@ -9,8 +9,11 @@ import ResetPassword from "./pages/ResetPassword";
 import StudentDashboard from './pages/StudentDashboard';
 import Feed from './pages/Feed';
 import Profile from './pages/Profile';
-import Portfolio from './pages/Portfolio'; // Naya import kiya
+import Portfolio from './pages/Portfolio';
 import PendingReviews from './pages/PendingReviews';
+import StudentLeaderboard from './pages/StudentLeaderboard';
+import ManageUsers from './pages/ManageUsers';
+import ManageLogs from './pages/ManageLogs';
 
 function App() {
   return (
@@ -24,13 +27,21 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          
+          {/* Student Dashboard Route */}
           <Route path="/student-dashboard" element={<StudentDashboard />} />
+          
           <Route path="/feed" element={<Feed />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/pending-reviews" element={<PendingReviews />} />
-          
-          {/* Naya Portfolio Route (ID ke sath) */}
           <Route path="/portfolio/:id" element={<Portfolio />} /> 
+          
+          {/* Teacher Portal Routes (PendingReviews ko teacher portal banaya hai) */}
+          <Route path="/pending-reviews" element={<PendingReviews />} />
+          <Route path="/leaderboard" element={<StudentLeaderboard />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin/users" element={<ManageUsers />} />
+          <Route path="/admin/logs" element={<ManageLogs />} />
         </Routes>
       </main>
 

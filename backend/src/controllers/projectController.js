@@ -146,5 +146,26 @@ const assignMarks = async (req, res) => {
     }
 };
 
+const getLeaderboard = async (req, res) => {
+    try {
+        const query = `
+            SELECT u.id, u.name, u.course, u.year, u.semester, 
+                   SUM(p.marks) AS total_marks, 
+                   ROUND(AVG(p.marks), 2) AS avg_marks, 
+                   COUNT(p.id) AS graded_projects
+            FROM users u
+            JOIN projects p ON u.id = p.user_id
+            WHERE p.marks IS NOT NULL
+            GROUP BY u.id, u.name, u.course, u.year, u.semester
+            ORDER BY total_marks DESC;
+        `;
+        const result = await pool.query(query);
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error('Leaderboard Error:', error.message);
+        res.status(500).json({ error: 'Leaderboard fetch karne mein server error' });
+    }
+};
+
 // Module exports mein naya function add karna mat bhoolna:
-module.exports = { addProject, getAllProjects, getMyProjects, updateProject, deleteProject, assignMarks };
+module.exports = { addProject, getAllProjects, getMyProjects, updateProject, deleteProject, assignMarks, getLeaderboard };

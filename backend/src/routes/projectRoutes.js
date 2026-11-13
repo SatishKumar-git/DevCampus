@@ -8,7 +8,8 @@ const {
     getMyProjects, 
     updateProject, 
     deleteProject, 
-    assignMarks 
+    assignMarks,
+    getLeaderboard
 } = require('../controllers/projectController');
 
 // 2. Sirf 'protect' middleware import kiya jo route ko secure karega
@@ -20,6 +21,7 @@ router.get('/', protect, getAllProjects);
 router.get('/my-projects', protect, getMyProjects);
 router.put('/:id', protect, updateProject);
 router.delete('/:id', protect, deleteProject);
+router.get('/leaderboard', protect, getLeaderboard);
 
 // Naya Marks Assign karne ka route (Yahan bhi 'protect' laga diya)
 router.put('/:id/marks', protect, assignMarks);

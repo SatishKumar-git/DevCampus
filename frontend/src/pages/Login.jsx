@@ -7,16 +7,27 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // State for Show/Hide
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    console.log("Login button clicked!"); // <-- Yeh check karo ki console mein print hota hai ya nahi
     try {
       const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      console.log("API Response:", res.data); // <-- Dekho role kya aa raha hai
+
       login(res.data.user, res.data.token);
-      navigate('/');
+
+      const userRole = res.data.user.role ? res.data.user.role.toLowerCase() : '';
+if (userRole === 'admin') {
+        window.location.href = '/'; // Admin ke liye Manage Users
+      } else if (userRole === 'teacher') {
+        window.location.href = '/'; // Teacher ke liye ye Teacher Portal / Home page
+      } else {
+        window.location.href = '/'; // Student ke liye bhi Workspace / Home page
+      }
     } catch (err) {
       setError('Invalid email or password');
       console.error('Login Error:', err);
@@ -25,9 +36,8 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen bg-[#F7F4ED] font-sans">
-      {/* Left Panel - Dark Teal with Amber Accents */}
+      {/* Left Panel */}
       <div className="hidden lg:flex flex-col justify-center w-1/2 p-16 bg-[#123B3B] text-[#F7F4ED] relative overflow-hidden">
-        {/* Subtle grid pattern simulation */}
         <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#F7F4ED_1px,transparent_1px),linear-gradient(to_bottom,#F7F4ED_1px,transparent_1px)] bg-[size:40px_40px]"></div>
         
         <div className="relative z-10">
@@ -51,7 +61,7 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Right Panel - Warm Ivory with Form */}
+      {/* Right Panel - Form */}
       <div className="flex flex-col justify-center w-full p-8 lg:w-1/2 lg:p-24 text-[#123B3B]">
         <div className="flex justify-between items-center mb-12">
           <span className="text-sm font-bold tracking-widest text-gray-500 uppercase">Developer Portal</span>

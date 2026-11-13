@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { getAllUsers } = require('../controllers/userController');
+const { getAllUsers, deleteUser } = require('../controllers/userController');
 const { protect } = require('../middleware/authMiddleware');
+const { getLogs } = require('../controllers/logController');
 
-router.get('/', protect, getAllUsers);
+router.get('/users', protect, getAllUsers);
+router.delete('/users/:id', protect, deleteUser);
+router.get('/logs', protect, getLogs);
 
 module.exports = router;

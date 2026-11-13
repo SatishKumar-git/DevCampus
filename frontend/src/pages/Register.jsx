@@ -76,7 +76,6 @@ export default function Register() {
               <select value={role} onChange={(e) => setRole(e.target.value)} className="w-full p-3 bg-transparent border border-gray-300 rounded focus:outline-none focus:border-[#123B3B] focus:ring-1 focus:ring-[#123B3B] cursor-pointer">
                 <option value="STUDENT">Student</option>
                 <option value="TEACHER">Teacher</option>
-                <option value="ADMIN">Admin</option>
               </select>
             </div>
           </div>
