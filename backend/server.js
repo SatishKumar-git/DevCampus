@@ -66,10 +66,10 @@ app.get('/', (req, res) => {
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 // Catch-all route for React Router
-app.get('*', (req, res) => {
+// Catch-all route for React Router (Using RegExp to avoid path-to-regexp errors)
+app.get(/.*/, (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
 });
-
 // Server Start Karne Ka Code
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
