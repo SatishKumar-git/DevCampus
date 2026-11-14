@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-// Automatically detect karo ki local chal raha hai ya production (Render)
-const baseURL = import.meta.env.PROD ? '' : 'http://localhost:5000';
-
+// Single-server setup ke liye baseURL ko khali (''') chhod do, 
+// taki requests automatically current live domain par jayein.
 const api = axios.create({
-  baseURL: baseURL,
+  baseURL: '', 
 });
 
 // Har request ke sath JWT token attach karne ke liye interceptor
