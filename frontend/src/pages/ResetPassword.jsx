@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../api/axiosInstance'; // Fixed: using axiosInstance instead of localhost fetch
 
 export default function ResetPassword() {
   const [email, setEmail] = useState('');
@@ -19,23 +20,16 @@ export default function ResetPassword() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, newPassword: password }),
-      });
+      // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+      const response = await api.post('/api/auth/reset-password', { email, newPassword: password });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200 || response.data) {
         setMessage('Password updated successfully! Redirecting to login...');
         setTimeout(() => navigate('/login'), 3000);
-      } else {
-        setError(data.error || 'Failed to update password. Please try again.');
       }
     } catch (err) {
       console.error('API Error:', err);
-      setError('Failed to connect to the server. Please check your network.');
+      setError(err.response?.data?.error || 'Failed to update password. Please try again.');
     }
   };
 

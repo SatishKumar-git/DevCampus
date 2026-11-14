@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axiosInstance'; // Fixed: using axiosInstance instead of localhost axios
 import { Link } from 'react-router-dom';
 
 export default function StudentLeaderboard() {
@@ -18,7 +18,8 @@ export default function StudentLeaderboard() {
   const fetchLeaderboard = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/projects/leaderboard', {
+      // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+      const res = await api.get('/api/projects/leaderboard', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setLeaderboard(res.data);
@@ -108,7 +109,9 @@ export default function StudentLeaderboard() {
                   <tr key={student.id} className="border-b border-gray-100 hover:bg-gray-50 transition">
                     <td className="p-4 font-bold text-[#E69A52]">#{index + 1}</td>
                     <td className="p-4 font-semibold text-gray-800">{student.name}</td>
-                    <td className="p-4 text-sm text-gray-600">{student.course} • {student.year} • {student.semester}</td>
+                    <td className="p-4 text-sm text-gray-600">
+                      {student.course} • {student.year} • {student.semester}
+                    </td>
                     <td className="p-4 text-sm text-gray-600">{student.graded_projects}</td>
                     <td className="p-4 font-bold text-green-600">{student.total_marks} pts</td>
                     <td className="p-4">

@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axiosInstance'; // Fixed: using axiosInstance instead of localhost axios
 import { AuthContext } from '../context/AuthContext';
 
 export default function Register() {
@@ -8,8 +8,8 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [course, setCourse] = useState('');
   const [enrollment, setEnrollment] = useState('');
-  const [year, setYear] = useState(''); // Naya state
-  const [semester, setSemester] = useState(''); // Naya state
+  const [year, setYear] = useState(''); 
+  const [semester, setSemester] = useState(''); 
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('STUDENT'); 
   const [error, setError] = useState('');
@@ -19,13 +19,14 @@ export default function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', { 
+      // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+      const res = await api.post('/api/auth/register', { 
         name, 
         email, 
         course,
         enrollment_number: enrollment,
-        year, // API me naya field
-        semester, // API me naya field
+        year, 
+        semester, 
         role, 
         password 
       });
@@ -80,7 +81,6 @@ export default function Register() {
             </div>
           </div>
           
-          {/* Agar user Student select karta hai, tabhi Course, Enrollment, Year aur Semester dikhega */}
           {role === 'STUDENT' && (
             <>
               <div className="flex gap-4">
@@ -94,7 +94,6 @@ export default function Register() {
                 </div>
               </div>
 
-              {/* Naye Dropdowns (Year aur Semester) */}
               <div className="flex gap-4">
                 <div className="w-1/2">
                   <label className="block mb-2 text-sm font-bold">Year</label>

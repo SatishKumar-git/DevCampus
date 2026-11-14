@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../api/axiosInstance'; // Fixed: using axiosInstance instead of localhost axios
 
 export default function Portfolio() {
   const { id } = useParams(); 
@@ -19,7 +19,8 @@ export default function Portfolio() {
     const fetchPortfolio = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`http://localhost:5000/api/portfolio/${id}`, {
+        // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+        const res = await api.get(`/api/portfolio/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setPortfolioData(res.data);
@@ -106,12 +107,9 @@ export default function Portfolio() {
                 <div className="mt-4 p-3 bg-[#1e2729] rounded border border-gray-600">
                   <p className="text-white font-bold">
                     Marks: <span className={project.marks ? "text-green-400" : "text-yellow-400"}>
-                      {/* Yahan /100 ko /10 kar diya gaya hai */}
                       {project.marks !== undefined && project.marks !== null ? `${project.marks}/10` : 'Not Graded Yet'}
                     </span>
                   </p>
-                  
-                  {/* Teacher wala Assign Marks button yahan se hata diya hai */}
                 </div>
               )}
             </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axiosInstance'; // Fixed: using axiosInstance instead of localhost axios
 
 export default function ManageUsers() {
   const [users, setUsers] = useState([]);
@@ -15,7 +15,8 @@ export default function ManageUsers() {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/admin/users', {
+      // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+      const res = await api.get('/api/admin/users', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUsers(res.data);
@@ -32,7 +33,8 @@ export default function ManageUsers() {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/admin/users/${id}`, {
+      // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+      await api.delete(`/api/admin/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axiosInstance'; // Fixed: using axiosInstance instead of localhost axios
 
 export default function PendingReviews() {
   const [projects, setProjects] = useState([]);
@@ -20,7 +20,8 @@ export default function PendingReviews() {
   const fetchProjects = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/projects', {
+      // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+      const res = await api.get('/api/projects', {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Sirf wo projects dikhayenge jinke marks abhi assign nahi hue hain
@@ -44,7 +45,8 @@ export default function PendingReviews() {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/projects/${projectId}/marks`, 
+      // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+      await api.put(`/api/projects/${projectId}/marks`, 
         { marks: parseInt(marks) },
         { headers: { Authorization: `Bearer ${token}` } }
       );

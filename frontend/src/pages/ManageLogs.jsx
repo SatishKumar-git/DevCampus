@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axiosInstance'; // Fixed: using axiosInstance instead of localhost axios
 
 export default function ManageLogs() {
   const [logs, setLogs] = useState([]);
@@ -13,7 +13,8 @@ export default function ManageLogs() {
   const fetchLogs = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/admin/logs', {
+      // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+      const res = await api.get('/api/admin/logs', {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Handle both array or object response formats safely

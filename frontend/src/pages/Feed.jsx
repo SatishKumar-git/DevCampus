@@ -16,7 +16,8 @@ export default function Feed() {
           return;
         }
 
-        const response = await fetch('http://localhost:5000/api/projects/', {
+        // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+        const response = await fetch('/api/projects/', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -24,7 +25,6 @@ export default function Feed() {
 
         if (response.ok) {
           // 🧠 FILTER LOGIC: Apne projects ko feed se hide karna
-          // User object se id nikal kar check karenge (sub, id, ya _id jo bhi backend bhej raha ho)
           const currentUserId = user?.sub || user?.id || user?._id;
           
           // Sirf wo projects rakhne hain jinka user_id current logged-in user ki id se alag ho

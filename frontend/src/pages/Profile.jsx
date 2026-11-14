@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../api/axiosInstance'; // Fixed: using axiosInstance instead of localhost axios
 
 export default function Profile() {
   const { user } = useContext(AuthContext); 
@@ -18,14 +18,15 @@ export default function Profile() {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/profile', {
+        // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+        const res = await api.get('/api/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
         if(res.data) {
             setFormData({
                 name: res.data.name || '', 
                 course: res.data.course || '', 
-                year: res.data.year || '',         // Added year
+                year: res.data.year || '',        // Added year
                 semester: res.data.semester || '', // Added semester
                 bio: res.data.bio || '',
                 skills: res.data.skills || '', 
@@ -47,7 +48,8 @@ export default function Profile() {
     e.preventDefault();
     try {
         const token = localStorage.getItem('token');
-        await axios.put('http://localhost:5000/api/profile', formData, {
+        // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+        await api.put('/api/profile', formData, {
             headers: { Authorization: `Bearer ${token}` }
         });
         setMessage('Profile updated successfully! 🎉');

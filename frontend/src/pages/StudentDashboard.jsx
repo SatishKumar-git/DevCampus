@@ -22,7 +22,8 @@ export default function StudentDashboard() {
       const token = localStorage.getItem('token') || (user && user.token);
       if (!token) return;
 
-      const response = await fetch('http://localhost:5000/api/projects/my-projects', {
+      // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+      const response = await fetch('/api/projects/my-projects', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -73,7 +74,8 @@ export default function StudentDashboard() {
 
     try {
       const token = localStorage.getItem('token') || (user && user.token);
-      const response = await fetch(`http://localhost:5000/api/projects/${id}`, {
+      // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+      const response = await fetch(`/api/projects/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -97,10 +99,10 @@ export default function StudentDashboard() {
       const token = localStorage.getItem('token') || (user && user.token);
       if (!token) return alert("Please login again!");
 
-      // Agar editProjectId hai toh PUT request jayegi, nahi toh POST
+      // Agar editProjectId hai toh PUT request jayegi, nahi toh POST (with relative paths)
       const url = editProjectId 
-        ? `http://localhost:5000/api/projects/${editProjectId}` 
-        : 'http://localhost:5000/api/projects';
+        ? `/api/projects/${editProjectId}` 
+        : '/api/projects';
       
       const method = editProjectId ? 'PUT' : 'POST';
 

@@ -6,14 +6,14 @@ export default function ForgotPassword() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
- const handleReset = async (e) => {
+  const handleReset = async (e) => {
     e.preventDefault();
     setMessage('');
     setError('');
 
     try {
-      // Backend ko asali request bhej rahe hain
-      const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
+      // Fixed: Removed localhost:5000 to use relative path for production single-server setup
+      const response = await fetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export default function ForgotPassword() {
       }
     } catch (err) {
       console.error('API Error:', err);
-      setError('Server se connect nahi ho paya. Kya backend chalu hai?');
+      setError('Server se connect nahi ho paya.');
     }
   };
 
