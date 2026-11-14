@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axiosInstance'; // Fixed: using axiosInstance instead of localhost axios
 import { AuthContext } from '../context/AuthContext';
 
 export default function Login() {
@@ -13,20 +13,20 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Login button clicked!"); // <-- Yeh check karo ki console mein print hota hai ya nahi
+    console.log("Login button clicked!");
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      console.log("API Response:", res.data); // <-- Dekho role kya aa raha hai
+      const res = await api.post('/api/auth/login', { email, password });
+      console.log("API Response:", res.data);
 
       login(res.data.user, res.data.token);
 
       const userRole = res.data.user.role ? res.data.user.role.toLowerCase() : '';
-if (userRole === 'admin') {
-        window.location.href = '/'; // Admin ke liye Manage Users
+      if (userRole === 'admin') {
+        window.location.href = '/'; 
       } else if (userRole === 'teacher') {
-        window.location.href = '/'; // Teacher ke liye ye Teacher Portal / Home page
+        window.location.href = '/'; 
       } else {
-        window.location.href = '/'; // Student ke liye bhi Workspace / Home page
+        window.location.href = '/'; 
       }
     } catch (err) {
       setError('Invalid email or password');
