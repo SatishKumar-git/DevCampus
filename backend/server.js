@@ -57,19 +57,19 @@ app.get('/api/portfolio/:id', async (req, res) => {
 });
 // ==========================================
 
-// API Status Route (Static files ke upar hona chahiye)
-app.get('/', (req, res) => {
+// API Status Route (Health check endpoint)
+app.get('/api/health', (req, res) => {
     res.json({ message: 'DevCampus API is running! 🚀' });
 });
 
 // React ke built static files serve karne ke liye
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
-// Catch-all route for React Router
 // Catch-all route for React Router (Using RegExp to avoid path-to-regexp errors)
 app.get(/.*/, (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
 });
+
 // Server Start Karne Ka Code
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
